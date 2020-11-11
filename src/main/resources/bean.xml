@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<!--扫描service组件 -->
+	<context:component-scan base-package="com.csdj.service.impl"></context:component-scan>
+	
+	<!--加载数据库配置文件  -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:database.properties"></property>
+	</bean>
+	
+	<!--配置数据源  -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${driver}"></property>
+		<property name="url" value="${url}"></property>
+		<property name="username" value="${username}"></property>
+		<property name="password" value="${password}"></property>
+	</bean>
+
+	<!--配置 sqlSessionFactory -->
+	<bean id="sqlSessionFactory" 
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!--加载数据源  -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!--加载mybatis配置文件  -->
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<!-- 配置实体类的别名 -->
+		<property name="typeAliasesPackage" value="com/csdj/pojo"></property>
+		<!-- mapper映射文件的路径
+			当mapper.xml的名字和接口相同,并且在统一目录下,此配置可以省略			
+		 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:com/csdj/mapper/**/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--mapper注入到spring中 
+		给每一个mapper接口一个默认的id值,取类名首字母改小写  如:userMapper  adminMapper等
+	 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.csdj.mapper"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+	
+</beans>

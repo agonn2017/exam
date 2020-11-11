@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.csdj.mapper.PaperMapper">
+	<!--查询论文  -->
+	<select id="getPaperByPage" resultType="Paper">
+		SELECT p.*,t.typeName FROM t_paper p,t_type t
+		WHERE p.typeCode = t.typeCode
+		<if test="title!=null and title!=''">
+			and title like concat('%',#{title},'%')
+		</if>
+		<if test="typeCode!=null and typeCode!=''">
+			and p.typeCode = #{typeCode}
+		</if>
+		limit #{index},#{pageSize}
+	</select>
+	
+	<!--查询论文  -->
+	<select id="getPaper" resultType="Paper">
+		SELECT p.*,t.typeName FROM t_paper p,t_type t
+		WHERE p.typeCode = t.typeCode
+		<if test="title!=null and title!=''">
+			and title like concat('%',#{title},'%')
+		</if>
+		<if test="typeCode!=null and typeCode!=''">
+			and p.typeCode = #{typeCode}
+		</if>
+	</select>
+	
+	<!--查询论文数量  -->
+	<select id="getCount" resultType="int">
+		SELECT count(*) FROM t_paper 
+		<where>
+			<if test="title!=null and title!=''">
+				and title like concat('%',#{title},'%')
+			</if>
+			<if test="typeCode!=null and typeCode!=''">
+				and typeCode = #{typeCode}
+			</if>
+		</where>
+	</select>
+	
+	<!--查询论文分类  -->
+	<select id="getType" resultType="Type">
+		select * from t_type
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="addPaper" parameterType="Paper">
+		insert  into `t_paper`(`title`,`typeCode`,`fileName`,`paperPath`,`paperSummary`,`createdBy`,`creationDate`,`modifyBy`,`modifyDate`) values 
+		(#{title},#{typeCode},#{fileName},#{paperPath},#{paperSummary},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+	</insert>
+	
+	<!-- 根据标题查询论文 -->
+	<select id="checkPaperByTitle" resultType="Paper">
+		select * from t_paper where title=#{title}
+	</select>
+	
+	<!--根据id删除论文  -->
+	<delete id="deletePaperById" parameterType="int">
+		delete from t_paper where id=#{id}
+	</delete>
+	
+	<!--修改论文  -->
+	<update id="updatePaperById" parameterType="Paper">
+		update t_paper set title=#{title},typeCode=#{typeCode},
+		paperSummary=#{paperSummary},fileName=#{fileName},paperPath=#{paperPath},
+		modifyBy=#{modifyBy},modifyDate=#{modifyDate} where id=#{id}
+	</update>
+	
+	<!--根据id查询  -->
+	<select id="queryById" parameterType="int" resultType="Paper">
+		select * from t_paper where id=#{id}
+	</select>
+	
+	
+</mapper>
