@@ -16,7 +16,8 @@ public class UserController {
 	private UserService service;
 	/**
 	 * 登录页面跳转
-	 * @return
+	 * @return    http://localhost:8080/exam/user/toLogin
+     * http://192.168.20.113:8080/exam-1.0-SNAPSHOT/user/toLogin
 	 */
 	@RequestMapping("/toLogin")
 	public String toLogin() {
@@ -36,6 +37,12 @@ public class UserController {
 		if (user==null) {
 			return "login";
 		}
+		//模拟代码错误
+		int i = 100/0;
+		//模拟冗余代码
+		int a = 100;
+		a=200;
+		int c=0;
 		session.setAttribute("user", user);
 		return "redirect:/paper/home";
 	}
